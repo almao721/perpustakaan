@@ -8,6 +8,18 @@
 <body>
     <h1>Katalog Buku Perpustakaan</h1>
 
+    @if (session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
+
+    @if ($errors->any())
+        <div>
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
     <form action="{{ route('siswa.buku') }}" method="GET">
         <input
             type="text"
@@ -27,6 +39,7 @@
                 <th>Penulis</th>
                 <th>Penerbit</th>
                 <th>Stok</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -38,15 +51,43 @@
                     <td>{{ $buku->penulis }}</td>
                     <td>{{ $buku->penerbit }}</td>
                     <td>{{ $buku->stok }}</td>
+                    <td>
+                        @if ($buku->stok > 0)
+                            <form action="{{ route('siswa.peminjaman') }}" method="POST">
+                                @csrf
+
+                                <input
+                                    type="hidden"
+                                    name="buku_id"
+                                    value="{{ $buku->id }}"
+                                >
+
+                                <input
+                                    type="number"
+                                    name="jumlah"
+                                    min="1"
+                                    max="{{ $buku->stok }}"
+                                    value="1"
+                                    required
+                                >
+
+                                <button type="submit">Pinjam</button>
+                            </form>
+                        @else
+                            Stok Habis
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6">Buku tidak ditemukan.</td>
+                    <td colspan="7">Buku tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
-    <p><a href="{{ route('siswa.dashboard') }}">Kembali ke Dashboard</a></p>
+    <p>
+        <a href="{{ route('siswa.dashboard') }}">Kembali ke Dashboard</a>
+    </p>
 </body>
 </html>

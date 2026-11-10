@@ -13,8 +13,10 @@
     <h2>Menu Siswa</h2>
 
     <ul>
-        <li><a href="#">Lihat Katalog Buku</a></li>
-        <li><a href="#">Riwayat Peminjaman</a></li>
+        <li>
+            <a href="{{ route('siswa.buku') }}">Lihat Katalog Buku</a>
+            <a href="{{ route('siswa.riwayat') }}">Riwayat Peminjaman</a>
+        </li>
     </ul>
 
     <form action="{{ url('/logout') }}" method="POST">
